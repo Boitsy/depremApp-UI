@@ -35,6 +35,11 @@ npm run reset-project
 
 This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
+
+## Important note!!
+
+Please download the expo app to view the app. If you wish to view the app on PC then please delete lines specified in the index.tsx file!
+
 ## Learn more
 
 To learn more about developing your project with Expo, look at the following resources:
