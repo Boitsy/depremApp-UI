@@ -1,75 +1,76 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text, Pressable, SafeAreaView, Alert, Image } from 'react-native';
+import MapView, { Marker } from 'react-native-maps'; // delete this along with its corresponding lines to be able to view it online
+import { Ionicons } from '@expo/vector-icons';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { styles } from '../styles/index.styles'; 
+
+const DUMMY_CONTACTS_ON_MAP = [
+  { id: '1', userName: 'Friend 1', avatarUrl: 'https://picsum.photos/id/1011/200', latitude: 37.78825, longitude: -122.4324 },
+  { id: '2', userName: 'Family Member', avatarUrl: 'https://picsum.photos/id/1025/200', latitude: 37.76825, longitude: -122.4024 },
+];
 
 export default function HomeScreen() {
+  const onSafePress = () => {
+    Alert.alert("Status Update", "A message has been sent to your contacts letting them know you are safe.");
+  };
+
+  const onHelpPress = () => {
+    Alert.alert("Emergency Alert!", "Your location and a request for help have been sent to your emergency contacts.");
+  };
+
+    const onSOSPress = () => {
+    Alert.alert("Emergency?", "I do not what this button should do ");
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.headerContainer}>
+        <Pressable style={styles.sosButton} onPress={onSOSPress}>
+          <Ionicons name="warning" size={20} color="white" />
+          <Text style={styles.sosButtonText}>SOS</Text>
+        </Pressable>
+      </View>
+
+      {/* delete from here to*/}
+      <MapView
+        style={styles.map}
+        initialRegion={{
+          latitude: 37.7749,
+          longitude: -122.4194,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      >
+
+        {DUMMY_CONTACTS_ON_MAP.map((contact) => (
+          <Marker
+            key={contact.id}
+            coordinate={{
+              latitude: contact.latitude,
+              longitude: contact.longitude,
+            }}
+            title={contact.userName}
+          >
+            <View style={styles.markerContainer}>
+              <Image
+                source={{ uri: contact.avatarUrl }}
+                style={styles.markerImage}
+              />
+            </View>
+          </Marker>
+        ))}
+      </MapView>
+{/*to here toview it online*/}
+
+      <View style={styles.bottomContainer}>
+        <Pressable style={[styles.actionButton, styles.safeButton]} onPress={onSafePress}>
+          <Text style={styles.actionButtonText}>I'm Safe</Text>
+        </Pressable>
+        <Pressable style={[styles.actionButton, styles.helpButton]} onPress={onHelpPress}>
+          <Text style={styles.actionButtonText}>I Need Help</Text>
+        </Pressable>
+      </View>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
